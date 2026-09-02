@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main() {
-    int opcao, opcao2;  
+    int opcao, opcao_aluno;  
     int sair = 0;      
     int sair_aluno = 0;             
     printf("-- Sistema Escolar --\n");
