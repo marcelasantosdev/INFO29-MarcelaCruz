@@ -54,7 +54,7 @@ int main() {
 
             case 1 : printf("---Matricular aluno---\n");
               if(qtd_aluno == TAM_ALUNO)
-              printf("Não será possível cadastrar o aluno.\nNúmero máximo de matriculas atingido.");
+              printf("Não será possível cadastrar o aluno.\nNúmero máximo de matriculas atingido.\n");
               else {
               printf("Digite o nome do aluno: \n");
               scanf("%s", alunos[qtd_aluno].nome);     
