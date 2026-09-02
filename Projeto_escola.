@@ -66,9 +66,11 @@ int main() {
               scanf("%d", &alunos[qtd_aluno].matricula);                           
 
               printf("Aluno cadastrado com sucesso!\n");
-              qtd_aluno++; break;
+              qtd_aluno++; 
                     
  }          
+            break;
+
             case 2 : printf("---Listar alunos---\n"); 
             if(qtd_aluno == 0) {
             printf("Lista de alunos vazia\n");           
