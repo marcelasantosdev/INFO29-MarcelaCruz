@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-// protótipos das funções
-void munuGeral();
-void menuAluno();
+#define TAM_ALUNO 3
+#define LISTA_CHEIA -1
+#define CAD_ALUNO_SUCESSO -2
+#define MATRICULA_IVALIDA -3
 
 typedef struct {
 
@@ -15,6 +16,14 @@ typedef struct {
 
 } aluno;
 
+// protótipos das funções
+void menuGeral();
+void menuAluno();
+int cadastrarAluno(aluno alunos[], int qtd_aluno);
+void imprimeAluno(aluno alunos[], int qtd_aluno);
+int atualizarAluno(aluno alunos[], int qtd_aluno);
+
+
  // typedef struct {
 
     //char nome[50];
@@ -25,18 +34,6 @@ typedef struct {
 
 //} professor;
 
-void imprimeAluno(aluno alunos[], int qtd_aluno) {
-
-    for(int icount = 0; icount < qtd_aluno; icount++) {
-        printf("Nome: %s\n", alunos[icount].nome);
-        printf("CPF %s\n", alunos[icount].cpf);
-        printf("Data de nascimento: %s\n", alunos[icount].data_nasc);
-        printf("Sexo: %s\n", alunos[icount].sexo);  
-        printf("Matricula: %d\n", alunos[icount].matricula);      
-    }    
-}
-
-#define TAM_ALUNO 3
 
 int main() {
 
@@ -50,7 +47,7 @@ int main() {
 
     while(sair != 1) {
 
-        munuGeral();
+        menuGeral();
         scanf("%d", &opcao);
 
         switch(opcao) {
@@ -68,34 +65,19 @@ int main() {
                     switch(opcao_aluno) {
 
                         case 1: {
-                            printf("---Matricular aluno---\n");
+                            int retorno = cadastrarAluno(alunos, qtd_aluno);
+                            
+                            if(retorno == LISTA_CHEIA) {
+                            printf("Não será possível cadastrar o aluno.\nNúmero máximo de matriculas atingido.\n");
+                        }   
+                            else if(retorno == CAD_ALUNO_SUCESSO){
+                            printf("Aluno matriculado com sucesso.\n");
+                            qtd_aluno++;
+                           }
 
-                            if(qtd_aluno == TAM_ALUNO)
-                                printf("Não será possível cadastrar o aluno.\nNúmero máximo de matriculas atingido.\n");
-
-                            else {
-                                printf("Digite o nome do(a) aluno: \n");
-                                scanf("%s", alunos[qtd_aluno].nome);
-
-                                printf("Digite o CPF do(a) aluno: \n");
-                                scanf("%s", alunos[qtd_aluno].cpf);
-
-                                printf("Digite a data de nascimento do(a) aluno: \n");
-                                scanf("%s", alunos[qtd_aluno].data_nasc);
-
-                                printf("Digite o sexo do(a) aluno: \n");
-                                scanf("%s", alunos[qtd_aluno].sexo);                           
-
-                                printf("Digite a matricula do(a) aluno: \n");
-                                scanf("%d", &alunos[qtd_aluno].matricula);
-
-                                printf("Aluno cadastrado com sucesso!\n");
-                                qtd_aluno++;
-                            }
-
-                            break;
+                           break;
                         }
-
+                        
                         case 2: {
                             printf("---Listar alunos---\n");
 
@@ -121,7 +103,6 @@ int main() {
                             int aluno_ativo = 0;
 
                             for(int i = 0; i < qtd_aluno; i++) {
-
                                 if(alunos[i].matricula == busca_matricula) {
 
                                     aluno_ativo = 1;
@@ -131,7 +112,6 @@ int main() {
                                     }
 
                                     qtd_aluno--;
-
                                     printf("Aluno excluído com sucesso.\n");
 
                                     break;
@@ -146,40 +126,13 @@ int main() {
                         }
 
                         case 4: {
-                            printf("---Atualizar Aluno---\n");                        
-
-                            int busca_matricula;
-
-                            printf("Digite a matrícula do aluno que deseja atualizar: \n");
-                            scanf("%d", &busca_matricula);
-
-                            int aluno_ativo = -1;
-
-                            for(int i = 0; i < qtd_aluno; i++) {
-
-                                if(alunos[i].matricula == busca_matricula) {
-
-                                    aluno_ativo = i;
-                                    break;
-                             }
-                          }                       
-                            if(aluno_ativo != -1){
-                                
-                              printf("Digite o novo nome: \n");
-                              scanf("%s", alunos[aluno_ativo].nome);                            
-
-                              printf("Digite o CPF do aluno: \n");
-                              scanf("%s", alunos[aluno_ativo].cpf);
-
-                              printf("Digite a matricula do aluno: \n");
-                              scanf("%d", &alunos[aluno_ativo].matricula);
-
-                              printf("Aluno atualizado com sucesso!\n");
-                          
+                            int retorno = atualizarAluno(alunos, qtd_aluno);
+                            
+                            if(retorno == CAD_ALUNO_SUCESSO){
+                            printf("Aluno atualizado com sucesso!\n");                   
                           }else {
                               printf("Matricula inválida ou inexistente\n");
-                            } 
-                                                                                  
+                            }                                                                                   
                             break;
                         }  
 
@@ -218,7 +171,7 @@ int main() {
 }
 
 // funções
-void munuGeral() {
+void menuGeral() {
     printf("Digite o número de acordo com a opção desejada: \n");
     printf("1 - Aluno\n");
     printf("2 - Professor\n");
@@ -234,3 +187,76 @@ void menuAluno(){
     printf("4 - Atualizar aluno\n");                   
     printf("0 - Sair\n");
 }
+
+int cadastrarAluno(aluno alunos[], int qtd_aluno){
+    printf("---Matricular aluno---\n");
+
+    if(qtd_aluno == TAM_ALUNO)
+        return LISTA_CHEIA;
+    else {
+        printf("Digite o nome do(a) aluno: \n");
+        scanf("%s", alunos[qtd_aluno].nome);
+
+        printf("Digite o CPF do(a) aluno: \n");
+        scanf("%s", alunos[qtd_aluno].cpf);
+
+        printf("Digite a data de nascimento do(a) aluno: \n");
+        scanf("%s", alunos[qtd_aluno].data_nasc);
+
+        printf("Digite o sexo do(a) aluno: \n");
+        scanf("%s", alunos[qtd_aluno].sexo);                           
+
+        printf("Digite a matricula do(a) aluno: \n");
+        scanf("%d", &alunos[qtd_aluno].matricula);
+
+        return CAD_ALUNO_SUCESSO;
+    }
+
+}
+
+void imprimeAluno(aluno alunos[], int qtd_aluno) {
+
+    for(int icount = 0; icount < qtd_aluno; icount++) {
+        printf("Nome: %s\n", alunos[icount].nome);
+        printf("CPF %s\n", alunos[icount].cpf);
+        printf("Data de nascimento: %s\n", alunos[icount].data_nasc);
+        printf("Sexo: %s\n", alunos[icount].sexo);  
+        printf("Matricula: %d\n", alunos[icount].matricula);      
+    }    
+}
+
+int atualizarAluno(aluno alunos[], int qtd_aluno) {
+    printf("---Atualizar Aluno---\n");                        
+
+    int busca_matricula;
+    printf("Digite a matrícula do aluno que deseja atualizar: \n");
+    scanf("%d", &busca_matricula);
+
+    int aluno_ativo = MATRICULA_IVALIDA;
+
+    for(int i = 0; i < qtd_aluno; i++) {
+
+        if(alunos[i].matricula == busca_matricula) {
+
+            aluno_ativo = i;
+            break;
+        }
+    }                       
+    if(aluno_ativo != MATRICULA_IVALIDA){
+        
+        printf("Digite o novo nome: \n");
+        scanf("%s", alunos[aluno_ativo].nome);                            
+
+        printf("Digite o CPF do aluno: \n");
+        scanf("%s", alunos[aluno_ativo].cpf);
+
+        printf("Digite a matricula do aluno: \n");
+        scanf("%d", &alunos[aluno_ativo].matricula);
+
+        return CAD_ALUNO_SUCESSO;
+    }else {
+        return MATRICULA_IVALIDA;
+    } 
+}
+                                                                                  
+                            
