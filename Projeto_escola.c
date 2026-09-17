@@ -2,6 +2,7 @@
 #include <string.h>
 
 #define TAM_ALUNO 3
+#define TAM_PROFESSOR 3
 #define LISTA_CHEIA -1
 #define CAD_ALUNO_SUCESSO -2
 #define MATRICULA_IVALIDA -3
@@ -12,15 +13,24 @@ typedef struct {
 
     char nome[50];
     char cpf[15];
-    int matricula;
     char sexo[10];
     char data_nasc[10];    
+} pessoa;
 
+typedef struct {
+    pessoa dados;
+    int matricula;
 } aluno;
+
+typedef struct {
+    pessoa dados;
+    int matricula;
+} professor;
 
 // protótipos das funções
 void menuGeral();
 void menuAluno();
+void menuProfessor();
 int cadastrarAluno(aluno alunos[], int qtd_aluno);
 void imprimeAluno(aluno alunos[], int qtd_aluno);
 int excluirAluno(aluno alunos[], int qtd_aluno);
@@ -38,11 +48,14 @@ int validarCPF(char cpf[]);
 
 int main() {
 
-    int opcao, opcao_aluno;
+    int opcao, opcao_aluno, opcao_professor;
     int sair = 0;
     int sair_aluno;
     int qtd_aluno = 0;
+    int sair_professor;
+    int qtd_professor = 0;
     aluno alunos[TAM_ALUNO];
+    professor professores[TAM_PROFESSOR]; 
 
     printf("-- Sistema Escolar --\n");
 
@@ -75,7 +88,6 @@ int main() {
                             printf("Aluno matriculado com sucesso.\n");
                             qtd_aluno++;
                            }
-
                            break;
                         }
                         
@@ -130,10 +142,17 @@ int main() {
 
                 break;
 
-            case 2: 
+            case 2: { 
                 printf("Módulo Professor\n");
-                break;
+                 sair_professor = 0;
 
+                while(sair_professor != 1) {
+
+                    menuProfessor();
+                    scanf("%d", &opcao_professor);
+                }
+                break;
+            }
             case 3:
                 printf("Módulo Diciplina\n");
                 break;
@@ -169,6 +188,15 @@ void menuAluno(){
     printf("0 - Sair\n");
 }
 
+void menuProfessor(){
+    printf("Digite o número de acordo com a opção desejada: \n");
+    printf("1 - Cadastrar professor: \n");
+    printf("2 - Listar professores\n");
+    printf("3 - Excluir professor\n");
+    printf("4 - Atualizar professor\n");                   
+    printf("0 - Sair\n");
+}
+
 int cadastrarAluno(aluno alunos[], int qtd_aluno){
     printf("---Matricular aluno---\n");
 
@@ -179,14 +207,14 @@ int cadastrarAluno(aluno alunos[], int qtd_aluno){
         while(retorno == NOME_INVALIDO){
         printf("Digite o nome do(a) aluno: \n");
         getchar();
-        fgets(alunos[qtd_aluno].nome, sizeof(alunos[qtd_aluno].nome), stdin);
+        fgets(alunos[qtd_aluno].dados.nome, sizeof(alunos[qtd_aluno].dados.nome), stdin);
 
-        for(int i= 0; alunos[qtd_aluno].nome[i] != '\0'; i++){
-            if(alunos[qtd_aluno].nome[i]  == '\n'){
-                alunos[qtd_aluno].nome[i] = '\0';
+        for(int i= 0; alunos[qtd_aluno].dados.nome[i] != '\0'; i++){
+            if(alunos[qtd_aluno].dados.nome[i]  == '\n'){
+                alunos[qtd_aluno].dados.nome[i] = '\0';
             }
         }
-        retorno = validarNome(alunos[qtd_aluno].nome);
+        retorno = validarNome(alunos[qtd_aluno].dados.nome);
         if(retorno == NOME_INVALIDO){
             printf("Nome inválido\n");
         }
@@ -194,19 +222,19 @@ int cadastrarAluno(aluno alunos[], int qtd_aluno){
         retorno = INFORMACAO_INVALIDA;      
         while(retorno == INFORMACAO_INVALIDA){
         printf("Digite o CPF do(a) aluno: \n");
-        scanf("%s", alunos[qtd_aluno].cpf);
+        scanf("%s", alunos[qtd_aluno].dados.cpf);
 
-        retorno = validarCPF(alunos[qtd_aluno].cpf);
+        retorno = validarCPF(alunos[qtd_aluno].dados.cpf);
         if(retorno == INFORMACAO_INVALIDA){
             printf("CPF inválido\n");
         }
     }
 
         printf("Digite a data de nascimento do(a) aluno: \n");
-        scanf("%s", alunos[qtd_aluno].data_nasc);
+        scanf("%s", alunos[qtd_aluno].dados.data_nasc);
 
         printf("Digite o sexo do(a) aluno: \n");
-        scanf("%s", alunos[qtd_aluno].sexo);                           
+        scanf("%s", alunos[qtd_aluno].dados.sexo);                           
 
         printf("Digite a matricula do(a) aluno: \n");
         scanf("%d", &alunos[qtd_aluno].matricula);
@@ -219,10 +247,10 @@ int cadastrarAluno(aluno alunos[], int qtd_aluno){
 void imprimeAluno(aluno alunos[], int qtd_aluno) {
 
     for(int icount = 0; icount < qtd_aluno; icount++) {
-        printf("Nome: %s\n", alunos[icount].nome);
-        printf("CPF %s\n", alunos[icount].cpf);
-        printf("Data de nascimento: %s\n", alunos[icount].data_nasc);
-        printf("Sexo: %s\n", alunos[icount].sexo);  
+        printf("Nome: %s\n", alunos[icount].dados.nome);
+        printf("CPF %s\n", alunos[icount].dados.cpf);
+        printf("Data de nascimento: %s\n", alunos[icount].dados.data_nasc);
+        printf("Sexo: %s\n", alunos[icount].dados.sexo);  
         printf("Matricula: %d\n", alunos[icount].matricula);      
     }    
 }
@@ -274,16 +302,16 @@ int atualizarAluno(aluno alunos[], int qtd_aluno) {
     if(aluno_ativo != -1){
         
         printf("Digite o novo nome: \n");
-        scanf("%s", alunos[aluno_ativo].nome);                            
+        scanf("%s", alunos[aluno_ativo].dados.nome);                            
 
         printf("Digite o CPF do aluno: \n");
-        scanf("%s", alunos[aluno_ativo].cpf);
+        scanf("%s", alunos[aluno_ativo].dados.cpf);
 
          printf("Digite a data de nascimento do(a) aluno: \n");
-        scanf("%s", alunos[aluno_ativo].data_nasc);
+        scanf("%s", alunos[aluno_ativo].dados.data_nasc);
 
         printf("Digite o sexo do(a) aluno: \n");
-        scanf("%s", alunos[aluno_ativo].sexo);                           
+        scanf("%s", alunos[aluno_ativo].dados.sexo);                           
 
         printf("Digite a matricula do aluno: \n");
         scanf("%d", &alunos[aluno_ativo].matricula);
@@ -317,57 +345,7 @@ int validarCPF(char cpf[]) {
     return CAD_ALUNO_SUCESSO;
 }
 
-// typedef struct {
 
-    //char nome[50];
-    //char cpf[15];
-    //char sexo[10];
-    //char data_nasc[10];    
-
-//} pessoa;
-
-// typedef struct {
-
-    //pessoa dados;
-    //int matricula;
-    
-//} alunos;
-
-// ***********************
-// int cadastrarAluno(aluno alunos[], int qtd_aluno){
-  //  printf("---Matricular aluno---\n");
-
-    //if(qtd_aluno == TAM_ALUNO)
-     //   return LISTA_CHEIA;
-   // else {
-    //    int retorno = NOME_INVALIDO;
-    //    while(retorno == NOME_INVALIDO){
-     //   printf("Digite o nome do(a) aluno: \n");
-     //   getchar();
-     //   fgets(alunos[qtd_aluno].dados.nome, sizeof(alunos[qtd_aluno].dados.nome), stdin);
-
-      //  for(int i= 0; alunos[qtd_aluno]dados.nome[i] != '\0'; i++){
-        //    if(alunos[qtd_aluno].dados.nome[i]  == '\n'){
-          //      alunos[qtd_aluno].dados.nome[i] = '\0';
-       //     }
-      //  }
-     //   retorno = validarNome(alunos[qtd_aluno].dados.nome);
-     //   if(retorno == NOME_INVALIDO){
-      //      printf("Nome inválido\n");
-     //   }
-   // }   
-
-// ***************************
-  // retorno = INFORMACAO_INVALIDA;      
-    //    while(retorno == INFORMACAO_INVALIDA){
-      //  printf("Digite o CPF do(a) aluno: \n");
-       // scanf("%s", alunos[qtd_aluno].dados.cpf);
-
-        //retorno = validarCPF(alunos[qtd_aluno].dados.cpf);
-        //if(retorno == INFORMACAO_INVALIDA){
-          //  printf("CPF inválido\n");
-        //}
-    //}
 
     // **********************
    // typedef struct {
