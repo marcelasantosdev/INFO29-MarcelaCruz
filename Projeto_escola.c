@@ -6,6 +6,7 @@
 #define CAD_ALUNO_SUCESSO -2
 #define MATRICULA_IVALIDA -3
 #define NOME_INVALIDO -4
+#define INFORMACAO_INVALIDA - 5
 
 typedef struct {
 
@@ -25,14 +26,12 @@ void imprimeAluno(aluno alunos[], int qtd_aluno);
 int excluirAluno(aluno alunos[], int qtd_aluno);
 int atualizarAluno(aluno alunos[], int qtd_aluno);
 int validarNome(char nome[]);
+int validarCPF(char cpf[]);
+
 
  // typedef struct {
 
-    //char nome[50];
-    //char cpf[15];
-    //int matricula;
-    //char sexo[10];
-    //char data_nasc[10];    
+   // dados pessoa;  
 
 //} professor;
 
@@ -70,7 +69,7 @@ int main() {
                             int retorno = cadastrarAluno(alunos, qtd_aluno);
                             
                             if(retorno == LISTA_CHEIA) {
-                            printf("Não será possível cadastrar o aluno.\nNúmero máximo de matriculas atingido.\n");
+                            printf("Não será possível cadastrar o aluno.\nNúmero máximo de matrículas atingido.\n");
                         }   
                             else if(retorno == CAD_ALUNO_SUCESSO){
                             printf("Aluno matriculado com sucesso.\n");
@@ -191,10 +190,17 @@ int cadastrarAluno(aluno alunos[], int qtd_aluno){
         if(retorno == NOME_INVALIDO){
             printf("Nome inválido\n");
         }
-
-    }
+    }   
+        retorno = INFORMACAO_INVALIDA;      
+        while(retorno == INFORMACAO_INVALIDA){
         printf("Digite o CPF do(a) aluno: \n");
         scanf("%s", alunos[qtd_aluno].cpf);
+
+        retorno = validarCPF(alunos[qtd_aluno].cpf);
+        if(retorno == INFORMACAO_INVALIDA){
+            printf("CPF inválido\n");
+        }
+    }
 
         printf("Digite a data de nascimento do(a) aluno: \n");
         scanf("%s", alunos[qtd_aluno].data_nasc);
@@ -296,3 +302,76 @@ int validarNome(char nome[]){
     }
     return CAD_ALUNO_SUCESSO;
 }
+
+int validarCPF(char cpf[]) {
+    int tamanho = 0;
+    for(int i= 0; cpf[i] != '\0'; i++){
+        tamanho++;
+        if(cpf[i] < '0' && cpf[i] > '9'){
+            return INFORMACAO_INVALIDA;
+        }
+    }
+    if(tamanho < 11){
+        return INFORMACAO_INVALIDA;
+    }
+    return CAD_ALUNO_SUCESSO;
+}
+
+// typedef struct {
+
+    //char nome[50];
+    //char cpf[15];
+    //char sexo[10];
+    //char data_nasc[10];    
+
+//} pessoa;
+
+// typedef struct {
+
+    //pessoa dados;
+    //int matricula;
+    
+//} alunos;
+
+// ***********************
+// int cadastrarAluno(aluno alunos[], int qtd_aluno){
+  //  printf("---Matricular aluno---\n");
+
+    //if(qtd_aluno == TAM_ALUNO)
+     //   return LISTA_CHEIA;
+   // else {
+    //    int retorno = NOME_INVALIDO;
+    //    while(retorno == NOME_INVALIDO){
+     //   printf("Digite o nome do(a) aluno: \n");
+     //   getchar();
+     //   fgets(alunos[qtd_aluno].dados.nome, sizeof(alunos[qtd_aluno].dados.nome), stdin);
+
+      //  for(int i= 0; alunos[qtd_aluno]dados.nome[i] != '\0'; i++){
+        //    if(alunos[qtd_aluno].dados.nome[i]  == '\n'){
+          //      alunos[qtd_aluno].dados.nome[i] = '\0';
+       //     }
+      //  }
+     //   retorno = validarNome(alunos[qtd_aluno].dados.nome);
+     //   if(retorno == NOME_INVALIDO){
+      //      printf("Nome inválido\n");
+     //   }
+   // }   
+
+// ***************************
+  // retorno = INFORMACAO_INVALIDA;      
+    //    while(retorno == INFORMACAO_INVALIDA){
+      //  printf("Digite o CPF do(a) aluno: \n");
+       // scanf("%s", alunos[qtd_aluno].dados.cpf);
+
+        //retorno = validarCPF(alunos[qtd_aluno].dados.cpf);
+        //if(retorno == INFORMACAO_INVALIDA){
+          //  printf("CPF inválido\n");
+        //}
+    //}
+
+    // **********************
+   // typedef struct {
+   //     char materia;
+   //     char alunos;
+   //     char professores;
+  // } diciplina;
