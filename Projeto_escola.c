@@ -52,9 +52,11 @@ void menuDiciplina();
 
 int cadastrarAluno(aluno alunos[], int qtd_aluno);
 int cadastrarProfessor(professor professores[], int qtd_professor);
+int cadastrarDiciplina(diciplina diciplinas[], int qtd_diciplina);
 
 void imprimeAluno(aluno alunos[], int qtd_aluno);
 void imprimeProfessor(professor professores[], int qtd_professor);
+void imprimeDiciplina(diciplina diciplinas[], int qtd_diciplina);
 
 int excluirAluno(aluno alunos[], int qtd_aluno);
 int excluirProfessor(professor professores[], int qtd_professor);
@@ -319,6 +321,36 @@ int main() {
                     menuDiciplina();
                     scanf("%d", &opcao_diciplina);
 
+                    switch(opcao_diciplina){
+
+                        case 1: {
+                            int retorno = cadastrarDiciplina(diciplinas, qtd_diciplina);
+
+                            if(retorno == LISTA_CHEIA){
+                                printf("Não será possível cadastrar a diciplina.\n");
+                                printf("Número máximo de cadastros atingido.\n");
+                            }
+
+                            else if(retorno == CAD_SUCESSO){
+                                printf("Diciplina cadastrada com sucesso\n");
+                                qtd_diciplina++;
+                            }
+                            break;
+                        }
+                        case 2: {
+                           printf("---Listar Diciplinas---\n");
+
+                            if(qtd_diciplina == 0) {
+                                printf("Lista de diciplinas vazia\n");
+                            }
+
+                            else {
+
+                                imprimeDiciplina(diciplinas, qtd_diciplina);
+                            }
+                            break;
+                    }
+
                 break;
             }
         }
@@ -526,7 +558,6 @@ int cadastrarDiciplina(diciplina diciplinas[], int qtd_diciplina) {
 
     else {
 
-
             printf("Digite o nome da diciplina: \n");
             getchar();
 
@@ -544,26 +575,30 @@ int cadastrarDiciplina(diciplina diciplinas[], int qtd_diciplina) {
             }
         }
     printf("Digite o código da diciplina: \n");
-            scanf("%s", diciplinas[qtd_diciplina].codigo);
+            scanf("%d", diciplinas[qtd_diciplina].codigo);
     
     printf("Digite o semestre da dicipliina: \n");
-            scanf("%s", dicipliinas[qtd_diciplina].semestre);
+            scanf("%d", diciplinas[qtd_diciplina].semestre);
 
-    printf("Digite a matrícula do(a) professor(a) da diiciplina: \n");
-            scanf("%d", &busca_matricula);
+    int retorno = INFORMACAO_INVALIDA;        
+    while(retorno == INFORMACAO_INVALIDA){
+        printf("Digite a matrícula do(a) professor(a) da diiciplina: \n");
+        scanf("%d", &busca_matricula);
     
 
-    for(int i = 0; i < qtd_professor; i++) {
+        for(int i = 0; i < qtd_professor; i++) {
 
         if(professores[i].matricula == busca_matricula) {
-          dicipliinas[i].professor = professores[i];
+            diciplinas[i].professor = professores[qtd_diciplina];
+            return CAD_SUCESSO;
+            retorno = CAD_SUCESSO;
         }
-
-
-            scanf("%s", dicipliinas[qtd_diciplina].semestre);
-
-
+        else{
+            printf("Matrícula do(a) professor inválida ou inexistente\n");
+        }
     }
+}
+}
 
 
 void imprimeAluno(aluno alunos[], int qtd_aluno) {
@@ -587,6 +622,18 @@ void imprimeProfessor(professor professores[], int qtd_professor) {
         printf("Data de nascimento: %s\n", professores[icount].dados.data_nasc);
         printf("Sexo: %s\n", professores[icount].dados.sexo);
         printf("Matricula: %d\n", professores[icount].matricula);
+
+    }
+}
+
+void imprimeDiciplina(diciplina diciplinas[], int qtd_diciplina) {
+
+    for(int icount = 0; icount < qtd_professor; icount++) {
+
+        printf("Nome: %s\n", diciplinas[icount].nome);
+        printf("Código: %s\n", diciplinas[icount].codigo);
+        printf("%sº semestre\n", diciplinas[icount].semestre);
+        printf("Professor: %s\n", diciplinas[icount].professor);
 
     }
 }
