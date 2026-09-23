@@ -61,10 +61,14 @@ void imprimeAluno(aluno alunos[], int qtd_aluno);
 void imprimeProfessor(professor professores[], int qtd_professor);
 void imprimeDiciplina(diciplina diciplinas[], int qtd_diciplina, professor professores[], int qtd_professor);
 void imprimeAlunosDiciplina(diciplina diciplinas[], int qtd_diciplina, aluno alunos[]);
+void imprimeDiciplinacomAlunos(diciplina diciplinas[], int qtd_diciplina, aluno alunos[], int qtd_aluno, professor professores[], int qtd_diciplina);
+void imprimeAlunosAniversariantes(aluno alunos[], int qtd_aluno);
+
 
 int excluirAluno(aluno alunos[], int qtd_aluno);
 int excluirProfessor(professor professores[], int qtd_professor);
 int excluirDiciplina(diciplina diciplinas[], int qtd_diciplina);
+int excluirAlunoDiciplina(diciplina diciplinas[]);
 
 int atualizarAluno(aluno alunos[], int qtd_aluno);
 int atualizarProfessor(professor professores[], int qtd_professor);
@@ -74,6 +78,9 @@ int CadastrarAlunoDiciplina(diciplina diciplinas[], int qtd_diciplina, aluno alu
 
 int validarNome(char nome[]);
 int validarCPF(char cpf[]);
+int validaDataNasc(char data_nasc[]);
+void ordenaProfessor(professor professores[], int qtd_professor);
+void ordenaAluno(aluno alunos[], int qtd_aluno);
 
 
 int main() {
@@ -214,6 +221,21 @@ int main() {
 
                             break;
                         }
+
+                        case 5: {
+
+                            printf("---Listar alunos aniversariantes do mês---\n");
+
+                            if(qtd_aluno == 0) {
+
+                                printf("Lista de alunos vazia\n");
+                            }
+                            else {
+
+                            imprimeAlunosAniversariantes(alunos, qtd_aluno);
+                            }
+                            break;
+                        }
                     }
                 }
 
@@ -238,8 +260,7 @@ int main() {
 
                         case 1: {
 
-                            int retorno = cadastrarProfessor(professores,
-                                                             qtd_professor);
+                            int retorno = cadastrarProfessor(professores, qtd_professor);
 
                             if(retorno == LISTA_CHEIA) {
 
@@ -280,8 +301,7 @@ int main() {
 
                         case 3: {
 
-                            int retorno = excluirProfessor(professores,
-                                                           qtd_professor);
+                            int retorno = excluirProfessor(professores, qtd_professor);
 
                             if(retorno == CAD_SUCESSO) {
 
@@ -301,8 +321,7 @@ int main() {
 
                         case 4: {
 
-                            int retorno = atualizarProfessor(professores,
-                                                             qtd_professor);
+                            int retorno = atualizarProfessor(professores, qtd_professor);
 
                             if(retorno == CAD_SUCESSO) {
 
@@ -357,12 +376,7 @@ int main() {
 
                         case 1: {
 
-                            int retorno = cadastrarDiciplina(
-                                diciplinas,
-                                qtd_diciplina,
-                                professores,
-                                qtd_professor
-                            );
+                            int retorno = cadastrarDiciplina(diciplinas, qtd_diciplina, professores, qtd_professor);
 
                             if(retorno == LISTA_CHEIA) {
 
@@ -393,12 +407,7 @@ int main() {
 
                             else {
 
-                                imprimeDiciplina(
-                                    diciplinas,
-                                    qtd_diciplina,
-                                    professores,
-                                    qtd_professor
-                                );
+                                imprimeDiciplina(diciplinas, qtd_diciplina, professores, qtd_professor );
 
                             }
 
@@ -407,10 +416,7 @@ int main() {
 
                         case 3: {
 
-                            int retorno = excluirDiciplina(
-                                diciplinas,
-                                qtd_diciplina
-                            );
+                            int retorno = excluirDiciplina(diciplinas, qtd_diciplina);
 
                             if(retorno == CAD_SUCESSO) {
 
@@ -430,11 +436,7 @@ int main() {
 
                         case 4: {
 
-                            int retorno = atualizarProfessorDiciplina(
-                                professores,
-                                qtd_professor,
-                                diciplinas,
-                                qtd_diciplina
+                            int retorno = atualizarProfessorDiciplina(professores, qtd_professor, diciplinas, qtd_diciplina
                             );
 
                             if(retorno == CAD_SUCESSO) {
@@ -454,12 +456,7 @@ int main() {
 
                         case 5: {
 
-                            int retorno = CadastrarAlunoDiciplina(
-                                diciplinas,
-                                qtd_diciplina,
-                                alunos,
-                                qtd_aluno
-                            );
+                            int retorno = CadastrarAlunoDiciplina(diciplinas, qtd_diciplina, alunos, qtd_aluno);
 
                             if(retorno == CAD_SUCESSO) {
 
@@ -476,13 +473,32 @@ int main() {
                             break;
                         }
 
+                        case 6: {
+
+                            int retorno = excluirAlunoDiciplina(diciplinas);
+                            
+                            if(retorno == CAD_SUCESSO){
+                                printf("Aluno(a) excluído(a) com sucesso!\n");
+                            }
+                            else if(retorno == MATRICULA_IVALIDA){
+                                printf("Aluno(a) não encontrado(a).");
+                            }
+                            else if(retorno == INFORMACAO_INVALIDA){
+                                printf("Diciplina não encontrada.");
+                            }
+                            break;
+                        }
+
+                        case 7: {
+
+                            imprimeAlunosDiciplina(diciplinas, qtd_diciplina, alunos);
+
+                            break;
+                        }
+
                         case 8: {
 
-                            imprimeAlunosDiciplina(
-                                diciplinas,
-                                qtd_diciplina,
-                                alunos
-                            );
+                            imprimeDiciplinacomAlunos(diciplinas, qtd_diciplina, alunos, qtd_aluno, professores, qtd_diciplina);
 
                             break;
                         }
@@ -546,10 +562,11 @@ void menuGeral() {
 void menuAluno() {
 
     printf("Digite o número de acordo com a opção desejada: \n");
-    printf("1 - Matricular aluno\n");
-    printf("2 - Listar aluno\n");
-    printf("3 - Excluir aluno\n");
-    printf("4 - Atualizar aluno\n");
+    printf("1 - Matricular aluno(a)\n");
+    printf("2 - Listar aluno(a)\n");
+    printf("3 - Excluir aluno(a)\n");
+    printf("4 - Atualizar aluno(a)\n");
+    printf("5 - Listar alunos(as) aniversariantes do mês\n");
     printf("0 - Sair\n");
 
 }
@@ -563,8 +580,8 @@ void menuDiciplina() {
     printf("4 - Atualizar professor(a) da diciplina\n");            //
     printf("5 - Cadastrar aluno(a) na diciplina\n");                //
     printf("6 - Excluir aluno da diciplina\n");
-    printf("7 - Atualizar aluno(a) da diciplina\n");
-    printf("8 - Listar alunos(as) da diciplina\n");                 // colocar em ordem
+    printf("7 - Listar alunos(as) da diciplina\n");
+    printf("8 - Listar dados e alunos(as) da diciplina\n");                // 
     printf("0 - Sair\n");
 
 }
@@ -640,16 +657,36 @@ int cadastrarAluno(aluno alunos[], int qtd_aluno) {
 
             }
         }
+        retorno = INFORMACAO_INVALIDA;
+        while(retorno == INFORMACAO_INVALIDA){
 
-        printf("Digite a data de nascimento do(a) aluno: \n");
+        printf("Digite a data de nascimento do(a) aluno (DD/MM/AAAA): \n");
         scanf("%s", alunos[qtd_aluno].dados.data_nasc);
+
+        retorno = validaDataNasc(alunos[qtd_aluno].dados.data_nasc);
+
+        if(retorno == INFORMACAO_INVALIDA){
+            printf("Data inválida.\n");
+        }
+    }
 
         printf("Digite o sexo do(a) aluno: \n");
         scanf("%s", alunos[qtd_aluno].dados.sexo);
 
+        int matricula_valida = 0;
+
+        while(matricula_valida == 0){
+
         printf("Digite a matricula do(a) aluno: \n");
         scanf("%d", &alunos[qtd_aluno].matricula);
 
+        if(alunos[qtd_aluno].matricula < 10){
+            printf("Número de Mátricula inválido. Certifique-se de não ter digitado apenas um digito.");
+        }
+        else{
+            matricula_valida = CAD_SUCESSO;
+            }
+        }
         return CAD_SUCESSO;
     }
 }
@@ -815,12 +852,13 @@ int cadastrarDiciplina(
 
 void imprimeAluno(aluno alunos[], int qtd_aluno) {
 
+    ordenaAluno(alunos, qtd_aluno);
+
     for(int icount = 0; icount < qtd_aluno; icount++) {
 
         printf("Nome: %s\n", alunos[icount].dados.nome);
         printf("CPF: %s\n", alunos[icount].dados.cpf);
-        printf("Data de nascimento: %s\n",
-               alunos[icount].dados.data_nasc);
+        printf("Data de nascimento: %s\n", alunos[icount].dados.data_nasc);
         printf("Sexo: %s\n", alunos[icount].dados.sexo);
         printf("Matricula: %d\n", alunos[icount].matricula);
 
@@ -842,12 +880,7 @@ void imprimeProfessor(professor professores[], int qtd_professor) {
     }
 }
 
-void imprimeDiciplina(
-    diciplina diciplinas[],
-    int qtd_diciplina,
-    professor professores[],
-    int qtd_professor
- ) {
+void imprimeDiciplina(diciplina diciplinas[], int qtd_diciplina, professor professores[], int qtd_professor) {
 
     for(int icount = 0; icount < qtd_diciplina; icount++) {
 
@@ -866,6 +899,43 @@ void imprimeDiciplina(
                        professores[j].dados.nome);
 
                 break;
+            }
+        }
+    }
+}
+
+void imprimeDiciplinacomAlunos(diciplina diciplinas[], int qtd_diciplina, aluno alunos[], int qtd_aluno, professor professores[], int qtd_professor){
+
+        for(int icount = 0; icount < qtd_diciplina; icount++) {
+
+        printf("Nome: %s\n", diciplinas[icount].nome);
+
+        printf("Código: %d\n", diciplinas[icount].codigo);
+
+        printf("%dº semestre\n", diciplinas[icount].semestre);
+
+        for(int j = 0; j < qtd_professor; j++) {
+
+            if(diciplinas[icount].matricula_professor ==
+               professores[j].matricula) {
+
+                printf("Professor(a): %s\n",
+                       professores[j].dados.nome);
+
+                break;
+            }
+        }
+
+        for(int j = 0; j < qtd_aluno; j++) {
+
+            for(int k = 0; k < TAM_ALUNO; k++){
+
+            if(diciplinas[icount].matricula_aluno[j] == alunos[k].matricula) {
+
+                printf("Aluno(a): %s\n", alunos[k].dados.nome);
+
+                break;
+              }
             }
         }
     }
@@ -1174,9 +1244,45 @@ int validarCPF(char cpf[]) {
 
     return CAD_SUCESSO;
 }
+int validaDataNasc(char data_nasc[]){
+
+    int dia;
+    int mes;
+    int tamanho = strlen(data_nasc);
+
+    if(tamanho != 10){
+        return INFORMACAO_INVALIDA;
+    }
+    if(data_nasc[2] != '/' || data_nasc[5] != '/'){
+        return INFORMACAO_INVALIDA;
+    }
+
+    for(int i = 0; i < 10; i++){
+
+        if(i == 2 || i == 5){
+            continue;
+        }
+
+        if(data_nasc[i] < '0' || data_nasc[i] > '9'){
+            return INFORMACAO_INVALIDA;
+        }
+
+    }
+    dia = (data_nasc[0] - '0') * 10 + (data_nasc[1] - '0');
+    mes = (data_nasc[3] - '0') * 10 + (data_nasc[4] - '0');
+
+    if(dia < 1 || dia > 31){
+        return INFORMACAO_INVALIDA;
+    
+    }
+    if(mes < 1 || mes > 12){
+        return INFORMACAO_INVALIDA;
+    }
+    return CAD_SUCESSO;
+}
 
 
-\\ particularidades de modulo diciplina
+// particularidades de modulo diciplina
 
 int CadastrarAlunoDiciplina(
     diciplina diciplinas[],
@@ -1269,14 +1375,7 @@ int CadastrarAlunoDiciplina(
     return CAD_SUCESSO;
 }
 
-
-
-
-void imprimeAlunosDiciplina(
-    diciplina diciplinas[],
-    int qtd_diciplina,
-    aluno alunos[]
- ) {
+void imprimeAlunosDiciplina(diciplina diciplinas[], int qtd_diciplina, aluno alunos[]) {
 
     int busca_matricula;
 
@@ -1299,8 +1398,120 @@ void imprimeAlunosDiciplina(
 
                     printf("Aluno(a): %s\n",
                            alunos[k].dados.nome);
-
                 }
+            }
+        }
+    }
+}
+
+void ordenaAluno(aluno alunos[], int qtd_aluno){
+    aluno temporario;
+
+    for(int i = 0; i < qtd_aluno - 1; i++ ){
+
+        for(int j = 0; j < qtd_aluno - 1; j++ ){
+
+            if(strcmp(alunos[j].dados.nome, alunos[j+1].dados.nome) > 0){
+
+                aluno temporario = alunos[j];
+                alunos[j] = alunos[j+1];
+                alunos[j+1] = temporario;
+
+            }
+        }
+    }
+}
+
+void ordenaProfessor(professor professores[], int qtd_professor){
+    professor temporario;
+
+    for(int i = 0; i < qtd_professor - 1; i++ ){
+
+        for(int j = 0; j < qtd_professor - 1; j++ ){
+
+            if(strcmp(professores[j].dados.nome, professores[j+1].dados.nome) > 0){
+
+                professor temporario = professores[j];
+                professores[j] = professores[j+1];
+                professores[j+1] = temporario;
+
+            }
+        }
+    }
+}
+
+int excluirAlunoDiciplina(diciplina diciplinas[]){
+
+    int busca_matricula;
+    int aluno_ativo = 0;
+    int busca_materia;
+    int materia_ativa = 0;
+
+    printf("Digite o código da matéria na qual o aluno(a) está: \n");
+    scanf("%d", &busca_materia);
+
+
+    for(int i = 0; i < TAM_DICIPLINA; i++){
+
+        if(busca_materia == diciplinas[i].codigo){
+            materia_ativa = 1;
+
+            printf("Digite qual a matrícula do aluno que deseja excluir: \n");
+            scanf("%d", &busca_matricula);
+
+            for(int j = 0; j < TAM_ALUNO; j++){
+
+                if(busca_matricula == diciplinas[i].matricula_aluno[j]){
+                    aluno_ativo = 1;
+
+                    for(int k = j; k < TAM_ALUNO - 1; k++){
+
+                        diciplinas[i].matricula_aluno[k] = diciplinas[i].matricula_aluno[k + 1];
+
+                        diciplinas[i].matricula_aluno[TAM_ALUNO - 1] = 0;
+                    }
+                    return CAD_SUCESSO;
+                }
+            }
+        }
+    }
+    if(materia_ativa == 0){
+        return INFORMACAO_INVALIDA;
+    }
+    if(aluno_ativo == 0){
+        return MATRICULA_IVALIDA;
+    }
+}
+
+void imprimeAlunosAniversariantes(aluno alunos[], int qtd_aluno){
+
+    char mes_escrito[12][20] = {"Janeiro",
+                        "Fevereiro",
+                        "Março",
+                        "Abril",
+                        "Maio",
+                        "Junho",
+                        "Julho",
+                        "Agosto",
+                        "Setembro",
+                        "Outubro",
+                        "Novembro",
+                        "Dezembro"};
+
+    for(int mes_num = 1; mes_num <= 12; mes_num++){
+
+    printf("------------\n");
+    printf("%s: \n", mes_escrito[mes_num - 1]);
+    printf("------------\n"); 
+
+    for(int i = 0; i < qtd_aluno; i++){
+
+        int mes_nasc = (alunos[i].dados.data_nasc[3] - '0') * 10 + (alunos[i].dados.data_nasc[4] - '0');
+        
+        if(mes_nasc == mes_num){
+
+            printf("Aluno(a): %s\n", alunos[i].dados.nome);
+            printf("Data de nascimento: %s\n", alunos[i].dados.data_nasc);
             }
         }
     }
