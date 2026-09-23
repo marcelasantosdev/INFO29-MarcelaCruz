@@ -61,7 +61,7 @@ void imprimeAluno(aluno alunos[], int qtd_aluno);
 void imprimeProfessor(professor professores[], int qtd_professor);
 void imprimeDiciplina(diciplina diciplinas[], int qtd_diciplina, professor professores[], int qtd_professor);
 void imprimeAlunosDiciplina(diciplina diciplinas[], int qtd_diciplina, aluno alunos[]);
-void imprimeDiciplinacomAlunos(diciplina diciplinas[], int qtd_diciplina, aluno alunos[], int qtd_aluno, professor professores[], int qtd_diciplina);
+void imprimeDiciplinacomAlunos(diciplina diciplinas[], int qtd_diciplina, aluno alunos[], int qtd_aluno, professor professores[], int qtd_professor);
 void imprimeAlunosAniversariantes(aluno alunos[], int qtd_aluno);
 
 
@@ -498,7 +498,7 @@ int main() {
 
                         case 8: {
 
-                            imprimeDiciplinacomAlunos(diciplinas, qtd_diciplina, alunos, qtd_aluno, professores, qtd_diciplina);
+                            imprimeDiciplinacomAlunos(diciplinas, qtd_diciplina, alunos, qtd_aluno, professores, qtd_professor);
 
                             break;
                         }
@@ -767,10 +767,7 @@ int cadastrarProfessor(professor professores[], int qtd_professor) {
     }
 }
 
-int cadastrarDiciplina(
-    diciplina diciplinas[],
-    int qtd_diciplina,
-    professor professores[],
+int cadastrarDiciplina(diciplina diciplinas[], int qtd_diciplina, professor professores[],
     int qtd_professor
  ) {
 
