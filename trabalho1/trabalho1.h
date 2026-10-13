@@ -45,10 +45,11 @@ int fatorial(int x); //função utilizada para testes
 int q1(char data[]);
 DiasMesesAnos q2(char datainicial[], char datafinal[]);
 int q3(char *texto, char c, int isCaseSensitive);
-int q4(char *strTexto, char *strBusca, int posicoes[30]);
+int q4(char texto[], char palavra[], int posicoes[]);
 int q5(int num);
-int q6(int numerobase, int numerobusca);
+int q6(int num, int digito);
 int q7(char matriz[8][10], char palavra[5]);
 DataQuebrada quebraData(char data[]);
+int avanca_posicao(char str[], int i);
 
 #endif  // MAIN_H

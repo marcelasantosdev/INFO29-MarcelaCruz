@@ -315,12 +315,83 @@ int q3(char *texto, char c, int isCaseSensitive)
         O retorno da função, n, nesse caso seria 1;
 
  */
-int q4(char *strTexto, char *strBusca, int posicoes[30])
-{
-    int qtdOcorrencias = -1;
+    
+int q4(char texto[], char palavra[], int posicoes[]) {
+    int igual = 1;
+    int qtdOcorrencias = 0;
+    int k;
+
+    char modificaPalavra[250];
+    char modificaTexto[250];
+
+    // Limpa e converte a palavra para minúscula
+    for(k = 0; palavra[k] != '\0'; k++) {
+        modificaPalavra[k] = palavra[k];
+        if(modificaPalavra[k] >= 65 && modificaPalavra[k] <= 90) {
+            modificaPalavra[k] = modificaPalavra[k] + 32;
+        }
+    }
+    modificaPalavra[k] = '\0';
+
+    // Limpa e converte o texto para minúscula
+    for(k = 0; texto[k] != '\0'; k++) {
+        modificaTexto[k] = texto[k];
+        if(modificaTexto[k] >= 65 && modificaTexto[k] <= 90) {
+            modificaTexto[k] = modificaTexto[k] + 32;
+        }
+    }
+    modificaTexto[k] = '\0';
+
+    int i = 0;
+    int char_pos = 1; // Contador da posição real do caractere para o vetor posicoes[]
+
+    while(modificaTexto[i] != '\0') {
+        if(modificaPalavra[0] == modificaTexto[i] || modificaTexto[i] < 0) {
+            igual = 1;
+            int temp_i = i;
+
+            for(int j = 0; modificaPalavra[j] != '\0'; j++) {
+                if(modificaTexto[temp_i] == '\0') {
+                    igual = 0;
+                    break;
+                }
+
+                // Se for acento, tratamos na comparação; senão, comparamos normal
+                if(modificaTexto[temp_i] < 0) {
+                    temp_i += 2; // Pula o acento na verificação
+                } else {
+                    if(modificaPalavra[j] != modificaTexto[temp_i]) {
+                        igual = 0;
+                        break;
+                    }
+                    temp_i += 1;
+                }
+            }
+
+            if(igual == 1) {
+                posicoes[qtdOcorrencias * 2] = char_pos;
+                posicoes[qtdOcorrencias * 2 + 1] = char_pos;
+
+                int tamanho_palavra = 0;
+                for(int j = 0; modificaPalavra[j] != '\0'; j++) {
+                    tamanho_palavra++;
+                }
+
+                posicoes[qtdOcorrencias * 2 + 1] = char_pos + tamanho_palavra - 1;
+                qtdOcorrencias++;
+            }
+        }
+
+        // CHAMANDO A FUNÇÃO AUXILIAR AQUI!
+        // Em vez de fazer a conta de bytes direto no while, chamamos nossa função:
+        i += avanca_posicao(modificaTexto, i);
+        
+        char_pos++; // Avança a contagem da letra real
+    }
 
     return qtdOcorrencias;
 }
+
 
 /*
  Q5 = inverte número
@@ -334,9 +405,17 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
 
 int q5(int num)
 {
-
-    return num;
+    int digito, invertido = 0;
+  
+    while(num != 0){
+    digito = num % 10;
+    num = num / 10;
+    invertido = (invertido * 10) + digito;
 }
+
+    return invertido;
+}
+
 
 /*
  Q6 = ocorrência de um número em outro
@@ -348,12 +427,71 @@ int q5(int num)
     Quantidade de vezes que número de busca ocorre em número base
  */
 
-int q6(int numerobase, int numerobusca)
-{
-    int qtdOcorrencias;
-    return qtdOcorrencias;
-}
 
+int q6(int num, int digito) {
+    
+    int qtdOcorrencia = 0;
+    int i, c;
+    int igual;
+    int casas = 0;
+    int aux;
+
+    char numero[20];
+    char sequencia[20];
+
+    i = 0;
+    while(num > 0) {
+        numero[i] = num % 10 + '0';
+        num = num / 10;
+        i++;
+    }
+
+    numero[i] = '\0';
+
+    for(c = 0; c < i / 2; c++) {
+        aux = numero[c];
+        numero[c] = numero[i - 1 - c];
+        numero[i - 1 - c] = aux;
+    }
+
+    i = 0;
+    while(digito > 0) {
+        sequencia[i] = digito % 10 + '0';
+        digito = digito / 10;
+        i++;
+    }
+
+    sequencia[i] = '\0';
+
+    for(c = 0; c < i / 2; c++) {
+        aux = sequencia[c];
+        sequencia[c] = sequencia[i - 1 - c];
+        sequencia[i - 1 - c] = aux;
+    }
+
+    while(sequencia[casas] != '\0') {
+        casas++;
+    }
+
+    for(i = 0; numero[i] != '\0'; i++) {
+        igual = 1;
+
+        for(c = 0; c < casas; c++) {
+            if(numero[i + c] == '\0' ||
+               numero[i + c] != sequencia[c]) {
+                igual = 0;
+                break;
+            }
+        }
+
+        if(igual) {
+            qtdOcorrencia++;
+        }
+    }
+
+    return qtdOcorrencia;
+}
+    
 /*
  Q7 = jogo busca palavras
  @objetivo
@@ -364,68 +502,159 @@ int q6(int numerobase, int numerobusca)
     1 se achou 0 se não achou
  */
 
- int q7(char matriz[8][10], char palavra[5])
- {
-     int achou;
-     return achou;
- }
+
+int q7(char matriz[8][10], char palavra[]){
+
+    int i, j, k, sentido;
+    int novaLinha, novaColuna;
+    int igual;
+    int tamanho = 0;
+    int achou = 0;
+
+    int linhas[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int colunas[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    while(palavra[tamanho] != '\0'){
+        tamanho++;
+    }
+
+    for(i = 0; i < 8; i++){
+
+        for(j = 0; j < 10; j++){
+
+            for(sentido = 0; sentido < 8; sentido++){
+
+                igual = 1;
+
+                for(k = 0; k < tamanho; k++){
+
+                    novaLinha = i + k * linhas[sentido];
+                    novaColuna = j + k * colunas[sentido];
+
+                    if(novaLinha < 0 || novaLinha >= 8 ||
+                       novaColuna < 0 || novaColuna >= 10){
+
+                        igual = 0;
+                        break;
+                    }
+
+                    if(matriz[novaLinha][novaColuna] != palavra[k]){
+                        igual = 0;
+                        break;
+                    }
+                }
+
+                if(igual == 1){
+                    achou++;
+                }
+            }
+        }
+    }
+
+    return achou;
+}
 
 
+DataQuebrada quebraData(char data[]) {
 
-DataQuebrada quebraData(char data[]){
-  DataQuebrada dq;
-  char sDia[3];
-	char sMes[3];
-	char sAno[5];
-	int i; 
+    DataQuebrada dq;
 
-	for (i = 0; data[i] != '/'; i++){
-		sDia[i] = data[i];	
-	}
-	if(i == 1 || i == 2){ // testa se tem 1 ou dois digitos
-		sDia[i] = '\0';  // coloca o barra zero no final
-	}else {
-		dq.valido = 0;
+    int pos1 = -1, pos2 = -1;
+    int tamanho_dia, tamanho_mes, tamanho_ano;
+    int i;
+
+    dq.iDia = 0;
+    dq.iMes = 0;
+    dq.iAno = 0;
+    dq.valido = 0;
+
+    // Procurar a primeira barra
+    for(i = 0; data[i] != '\0'; i++) {
+        if(data[i] == '/') {
+            pos1 = i;
+            break;
+        }
+    }
+
+    if(pos1 == -1) {
+        return dq;
+    }
+
+    // Procurar a segunda barra
+    for(i = pos1 + 1; data[i] != '\0'; i++) {
+        if(data[i] == '/') {
+            pos2 = i;
+            break;
+        }
+    }
+
+    if(pos2 == -1) {
+        return dq;
+    }
+
+    // Calcular os tamanhos
+    tamanho_dia = pos1;
+    tamanho_mes = pos2 - pos1 - 1;
+
+    tamanho_ano = 0;
+
+    for(i = pos2 + 1; data[i] != '\0'; i++) {
+        tamanho_ano++;
+    }
+
+    // Verificar os tamanhos permitidos
+    if((tamanho_dia != 1 && tamanho_dia != 2) ||
+       (tamanho_mes != 1 && tamanho_mes != 2) ||
+       (tamanho_ano != 2 && tamanho_ano != 4)) {
+        return dq;
+    }
+
+    // Verificar se o dia contém apenas números
+    for(i = 0; i < pos1; i++) {
+        if(data[i] < '0' || data[i] > '9') {
+            return dq;
+        }
+    }
+
+    // Verificar se o mês contém apenas números
+    for(i = pos1 + 1; i < pos2; i++) {
+        if(data[i] < '0' || data[i] > '9') {
+            return dq;
+        }
+    }
+
+    // Verificar se o ano contém apenas números
+    for(i = pos2 + 1; data[i] != '\0'; i++) {
+        if(data[i] < '0' || data[i] > '9') {
+            return dq;
+        }
+    }
+
+    // Converter o dia para inteiro
+    for(i = 0; i < pos1; i++) {
+        dq.iDia = dq.iDia * 10 + (data[i] - '0');
+    }
+
+    // Converter o mês para inteiro
+    for(i = pos1 + 1; i < pos2; i++) {
+        dq.iMes = dq.iMes * 10 + (data[i] - '0');
+    }
+
+    // Converter o ano para inteiro
+    for(i = pos2 + 1; data[i] != '\0'; i++) {
+        dq.iAno = dq.iAno * 10 + (data[i] - '0');
+    }
+
+    dq.valido = 1;
+
     return dq;
-  }  
-	
+}
 
-	int j = i + 1; //anda 1 cada para pular a barra
-	i = 0;
-
-	for (; data[j] != '/'; j++){
-		sMes[i] = data[j];
-		i++;
-	}
-
-	if(i == 1 || i == 2){ // testa se tem 1 ou dois digitos
-		sMes[i] = '\0';  // coloca o barra zero no final
-	}else {
-		dq.valido = 0;
-    return dq;
-  }
-	
-
-	j = j + 1; //anda 1 cada para pular a barra
-	i = 0;
-	
-	for(; data[j] != '\0'; j++){
-	 	sAno[i] = data[j];
-	 	i++;
-	}
-
-	if(i == 2 || i == 4){ // testa se tem 2 ou 4 digitos
-		sAno[i] = '\0';  // coloca o barra zero no final
-	}else {
-		dq.valido = 0;
-    return dq;
-  }
-
-  dq.iDia = atoi(sDia);
-  dq.iMes = atoi(sMes);
-  dq.iAno = atoi(sAno); 
-
-	dq.valido = 1;
+int avanca_posicao(char str[], int i) {
     
-  return dq;
+    // No UTF-8, se o byte for menor que 0, é um caractere acentuado (ocupa 2 bytes)
+    if (str[i] < 0) {
+        return 2; // Pula 2 bytes
+    }
+    return 1;     // Pula 1 byte normal
 }
