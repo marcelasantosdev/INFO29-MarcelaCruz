@@ -210,7 +210,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
     dma.qtdMeses = final.iMes - inicial.iMes;
     dma.qtdDias = final.iDia - inicial.iDia;
 
-    // Se os dias ficaram negativos -> pegar um mês emprestado 
+    // Se os dias ficarem negativos -> pegar um mês emprestado 
     if (dma.qtdDias < 0) {
 
         mesAnterior = final.iMes - 1;
@@ -225,7 +225,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
         dma.qtdMeses--;
     }
 
-    /* Se os meses ficaram negativos, pegar um ano emprestado!!
+    /* Se os meses ficaram negativos, pegar um ano emprestado!
      ex.: mes final -> 2 de 2025 e mes inicial -> 12 de 2024 = - 10 e 1 ano, somando
      12 a -10 e diminuindo 1  do ano fica com resultado 2 meses */
      
@@ -356,7 +356,7 @@ int q4(char texto[], char palavra[], int posicoes[]) {
                     break;
                 }
 
-                // Se for acento, tratamos na comparação; senão, comparamos normal
+                // Se for acento, muda na comparação; senão, compara normal
                 if(modificaTexto[temp_i] < 0) {
                     temp_i += 2; // Pula o acento na verificação
                 } else {
@@ -382,8 +382,7 @@ int q4(char texto[], char palavra[], int posicoes[]) {
             }
         }
 
-        // CHAMANDO A FUNÇÃO AUXILIAR AQUI!
-        // Em vez de fazer a conta de bytes direto no while, chamamos nossa função:
+        // CHAMANDO A FUNÇÃO (avanca_posicao) AQUI
         i += avanca_posicao(modificaTexto, i);
         
         char_pos++; // Avança a contagem da letra real

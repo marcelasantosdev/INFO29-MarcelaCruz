@@ -43,7 +43,7 @@ int main()
     testQ7(); 
 }
 
-int ligado = 1;
+int ligado = 0;
 void show_log(char *str)
 {
     if (ligado)
@@ -208,22 +208,21 @@ void testQ7()
 {
     show_log("testQ7()");
     char matrix[8][10] = {
-        { 'Q', 'M', 'J', 'A', 'L', 'A', 'Z', 'F', 'C', 'R' },
-        { 'N', 'O', 'Y', 'G', 'D', 'S', 'K', 'H', 'E', 'X' },
-        { 'V', 'T', 'W', 'U', 'T', 'S', 'Z', 'A', 'L', 'C' },
-        { 'M', 'I', 'B', 'D', 'N', 'F', 'R', 'J', 'G', 'E' },
-        { 'H', 'M', 'K', 'T', 'U', 'X', 'W', 'O', 'P', 'Y' },
-        { 'C', 'O', 'A', 'I', 'L', 'M', 'V', 'G', 'N', 'B' },
+        { 'Q', 'M', 'J', 'D', 'L', 'A', 'Z', 'F', 'C', 'R' },
+        { 'N', 'B', 'Y', 'G', 'P', 'S', 'K', 'H', 'E', 'X' },
+        { 'V', 'O', 'W', 'U', 'T', 'I', 'Z', 'A', 'L', 'C' },
+        { 'M', 'Q', 'B', 'D', 'N', 'F', 'R', 'J', 'G', 'E' },
+        { 'H', 'S', 'K', 'T', 'U', 'X', 'W', 'O', 'P', 'Y' },
+        { 'C', 'Z', 'A', 'I', 'L', 'M', 'V', 'G', 'N', 'B' },
         { 'D', 'F', 'E', 'H', 'S', 'K', 'J', 'Q', 'R', 'T' },
         { 'U', 'X', 'Y', 'W', 'V', 'O', 'P', 'N', 'M', 'L' }
     };
     char stringBusca [6] = { 'F', 'E', 'H', 'S', 'K'};
     printf("%d\n", q7(matrix, stringBusca) == 1);
-    strcpy(stringBusca, "ADS");
+    strcpy(stringBusca, "KJQRT");
     printf("%d\n", q7(matrix, stringBusca) == 1);
     strcpy(stringBusca, "AATOK");
     printf("%d\n", q7(matrix, stringBusca) == 0);
-    strcpy(stringBusca, "OTIMO");
+    strcpy(stringBusca, "LTBON");
     printf("%d\n", q7(matrix, stringBusca) == 1);
-
 }
