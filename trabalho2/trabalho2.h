@@ -42,6 +42,8 @@ No *montarListaEncadeadaComCabecote();
 void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[]);
 void destruirListaEncadeadaComCabecote(No **inicio);
 
+void bubbleSort(int arr[], int n);
+
 void inicializar();
 void finalizar();
 void dobrar(int *x);
