@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#define TAM_LIMITE_AUX 15
-
 #include "trabalho2.h"
+
+#define TAM_LIMITE_AUX 15
 
 Dados vetorPrincipal[TAM];
 
@@ -384,6 +384,7 @@ int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
                 if(vetorPrincipal[posicao-1].qtd > tamanhoTotal){
                     vetorPrincipal[posicao-1].qtd = tamanhoTotal;
                 }
+                retorno = SUCESSO;
             }
         }
     }
@@ -405,6 +406,19 @@ int getQuantidadeElementosEstruturaAuxiliar(int posicao)
 
     int retorno = 0;
     
+    if(posicao < 1 || posicao > TAM ) {
+        retorno = POSICAO_INVALIDA;
+    }
+    else if(vetorPrincipal[posicao-1].auxiliar == NULL) {
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+    else if(vetorPrincipal[posicao-1].qtd == 0){
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+    }
+    else if(vetorPrincipal[posicao-1].qtd > 0){
+        retorno = vetorPrincipal[posicao-1].qtd;
+    }
+    
 
     return retorno;
 }
@@ -418,8 +432,46 @@ Retorno (No*)
 */
 No *montarListaEncadeadaComCabecote()
 {
+    No *inicio = malloc(sizeof(No));
+    
+    if(inicio == NULL){
+        return NULL;
+    }
+    
+    inicio->prox = NULL;
+    
+    No *final = inicio;
+    
+    int temNumero = 0;
+    
+    for(int i = 0; i < TAM; i++){
+        
+        if(vetorPrincipal[i].auxiliar != NULL){
+            
+            for(int j = 0; j < vetorPrincipal[i].qtd; j++){
+                
+                No *novo = malloc(sizeof(No));
+                
+                if(novo == NULL){
+                    destruirListaEncadeadaComCabecote(&inicio);
+                    return NULL;
+                }
+                novo->conteudo = vetorPrincipal[i].auxiliar[j];
+                novo->prox = NULL;
+                
+                final->prox = novo;
+                final = novo;
+                temNumero = 1;
+            }
+        }
+    }
 
-    return NULL;
+    if(!temNumero){
+        free(inicio);
+        return NULL;
+    }
+
+    return inicio;
 }
 
 /*
@@ -428,9 +480,26 @@ Retorno void
 */
 void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[])
 {
+    
+    if(inicio ==NULL){
+        return;
+    }
+    
+
+    No *aux = inicio->prox;
+    int i = 0;
+    
+    
+    while(aux != NULL){
+        vetorAux[i] = aux->conteudo;
+        i++;
+        aux = aux->prox;
+    
+    }
+    
 }
 
-/*
+/*https://www.onlinegdb.com/edit/hDCkWHFu-#editor_2
 Objetivo: Destruir a lista encadeada com cabeçote a partir de início.
 O ponteiro inicio deve ficar com NULL.
 
@@ -439,6 +508,18 @@ Retorno
 */
 void destruirListaEncadeadaComCabecote(No **inicio)
 {
+    if(inicio == NULL)
+        return;
+    
+    No *aux;
+    
+    while(*inicio != NULL){
+    
+    aux = *inicio;
+    *inicio = (*inicio)->prox;
+    free(aux);
+    
+    }
 }
 
 /*
@@ -463,6 +544,11 @@ para poder liberar todos os espaços de memória das estruturas auxiliares.
 
 void finalizar()
 {
+    for(int i = 0; i < TAM; i++){
+        free(vetorPrincipal[i].auxiliar);
+        vetorPrincipal[i].auxiliar = NULL;
+    }
+    
 }
 
 void bubbleSort(int arr[], int n) {
